@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Search Qualification Form (Demo)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f7f6;--card:#fff;--ink:#16201e;--mut:#5a6663;--line:#d6dcd9;--acc:#0f6b5c;--accink:#fff;--sel:#e2f1ed;--hot:#b3261e;--warm:#8a5a00;--cool:#2f5f8a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1514;--card:#192120;--ink:#edf3f1;--mut:#9db0aa;--line:#2c3836;--acc:#3fbfa8;--accink:#06201a;--sel:#1e3a35;--hot:#ff8a80;--warm:#e6b455;--cool:#7db6e8}}
+:root[data-theme="dark"]{--bg:#0f1514;--card:#192120;--ink:#edf3f1;--mut:#9db0aa;--line:#2c3836;--acc:#3fbfa8;--accink:#06201a;--sel:#1e3a35;--hot:#ff8a80;--warm:#e6b455;--cool:#7db6e8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:620px;margin:0 auto;padding:16px}
+.demo{font-size:13px;color:var(--mut);text-align:center;margin:4px 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:8px}
+.track{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:20px}
+#bar{height:100%;width:25%;background:var(--acc);transition:width .25s}
+h1{font-size:24px;line-height:1.25;margin:0 0 6px}
+h2{font-size:17px;margin:0 0 10px}
+p.sub{color:var(--mut);margin:0 0 18px}
+label,.q{display:block;font-weight:600;margin:16px 0 8px}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--sel);border-color:var(--acc);font-weight:600}
+.big .chip{flex:1 1 220px;border-radius:14px;padding:22px 16px;font-size:18px;text-align:center}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--mut);margin-top:18px}
+.check input{margin-top:4px;width:18px;height:18px;flex:none}
+.row{display:flex;gap:10px;margin-top:22px}
+.btn{font:inherit;font-weight:600;border-radius:10px;padding:13px 20px;cursor:pointer;border:1.5px solid var(--acc)}
+#next{flex:1;background:var(--acc);color:var(--accink)}
+#back,.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+#err{color:var(--hot);font-size:14px;min-height:20px;margin-top:10px}
+[hidden]{display:none!important}
+.badge{display:inline-block;font-weight:700;border-radius:999px;padding:4px 12px;font-size:14px;border:1.5px solid currentColor}
+.hot{color:var(--hot)}.warm{color:var(--warm)}.cool{color:var(--cool)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0;font-size:15px}
+dt{color:var(--mut)}dd{margin:0;overflow-wrap:anywhere}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:14px;background:var(--bg)}
+.box ol{margin:0;padding-left:20px;font-size:15px}
+.msg{white-space:pre-wrap;font-size:14px;margin:0}
+details{margin-top:14px;font-size:14px}
+pre{overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px}
+textarea{resize:vertical}.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+</style>
+</head>
+<body>
+<main>
+<p class="demo">Demo form. Your logo and brand name go here.</p>
+<p class="demo" id="testbar" hidden style="color:var(--warm);font-weight:600">TEST MODE: submissions are tagged test:true.</p>
+<div class="card" id="formCard">
+  <div class="meta"><span id="stepno">Step 1 of 5</span><span>About 1 minute</span></div>
+  <div class="track"><div id="bar"></div></div>
+
+  <section data-step="0">
+    <h1>Let's find your next move</h1>
+    <p class="sub">Answer a few quick questions so we can match you with the right advice.</p>
+    <div class="chips big" data-name="intent" data-auto="1">
+      <button type="button" class="chip" data-v="buy" aria-pressed="false">I'm buying</button>
+      <button type="button" class="chip" data-v="sell" aria-pressed="false">I'm selling</button>
+    </div>
+  </section>
+
+  <section data-step="1" data-path="buy" hidden>
+    <h2>What are you looking for?</h2>
+    <label for="area">Preferred area or neighbourhood</label>
+    <input type="text" id="area" name="area" placeholder="e.g. Downtown or Scarsdale" required>
+    <span class="q">Bedrooms</span>
+    <div class="chips" data-name="beds" data-req="1"><button type="button" class="chip" data-v="1+">1+</button><button type="button" class="chip" data-v="2+">2+</button><button type="button" class="chip" data-v="3+">3+</button><button type="button" class="chip" data-v="4+">4+</button><button type="button" class="chip" data-v="5+">5+</button></div>
+    <span class="q">Bathrooms</span>
+    <div class="chips" data-name="baths" data-req="1"><button type="button" class="chip" data-v="1+">1+</button><button type="button" class="chip" data-v="2+">2+</button><button type="button" class="chip" data-v="3+">3+</button></div>
+    <span class="q">Budget</span>
+    <div class="chips" data-name="budget" data-req="1"><button type="button" class="chip" data-v="Under 400K">Under 400K</button><button type="button" class="chip" data-v="400K to 700K">400K to 700K</button><button type="button" class="chip" data-v="700K to 1M">700K to 1M</button><button type="button" class="chip" data-v="Over 1M">Over 1M</button></div>
+  </section>
+
+  <section data-step="1" data-path="sell" hidden>
+    <h2>Tell us about your home</h2>
+    <label for="addr">Property address or neighbourhood</label>
+    <input type="text" id="addr" name="area" placeholder="e.g. 12 Maple Street" required>
+    <span class="q">Property type</span>
+    <div class="chips" data-name="ptype" data-req="1"><button type="button" class="chip" data-v="House">House</button><button type="button" class="chip" data-v="Condo or townhome">Condo or townhome</button><button type="button" class="chip" data-v="Multi-family">Multi-family</button><button type="button" class="chip" data-v="Land">Land</button></div>
+    <span class="q">Estimated value</span>
+    <div class="chips" data-name="budget" data-req="1"><button type="button" class="chip" data-v="Under 400K">Under 400K</button><button type="button" class="chip" data-v="400K to 700K">400K to 700K</button><button type="button" class="chip" data-v="700K to 1M">700K to 1M</button><button type="button" class="chip" data-v="Over 1M">Over 1M</button></div>
+  </section>
+
+  <section data-step="2" hidden>
+    <h2>Timing</h2>
+    <span class="q" id="tq">When do you want to make your move?</span>
+    <div class="chips" data-name="timeline" data-req="1"><button type="button" class="chip" data-v="Within 1 month">Within 1 month</button><button type="button" class="chip" data-v="1 to 3 months">1 to 3 months</button><button type="button" class="chip" data-v="3 to 6 months">3 to 6 months</button><button type="button" class="chip" data-v="6+ months">6+ months</button><button type="button" class="chip" data-v="Just exploring">Just exploring</button></div>
+    <label for="notes">What matters most to you? (optional)</label>
+    <textarea id="notes" name="notes" rows="3" maxlength="300"></textarea>
+  </section>
+  <section data-step="2" data-path="buy" hidden>
+    <span class="q">Financing</span>
+    <div class="chips" data-name="fin" data-req="1"><button type="button" class="chip" data-v="Pre-approved">Pre-approved</button><button type="button" class="chip" data-v="Working on it">Working on it</button><button type="button" class="chip" data-v="Paying cash">Paying cash</button><button type="button" class="chip" data-v="Not yet">Not yet</button></div>
+  </section>
+  <section data-step="2" data-path="sell" hidden>
+    <span class="q">Would you like a free home valuation?</span>
+    <div class="chips" data-name="val" data-req="1"><button type="button" class="chip" data-v="Yes, soon">Yes, soon</button><button type="button" class="chip" data-v="Not yet">Not yet</button></div>
+  </section>
+
+  <section data-step="3" hidden>
+    <h2>Where should we send your results?</h2>
+    <label for="nm">Full name</label>
+    <input type="text" id="nm" name="name" autocomplete="name" placeholder="First and last name" required>
+    <label for="em">Email</label>
+    <input type="email" id="em" name="email" autocomplete="email" required>
+    <label for="ph">Phone</label>
+    <input type="tel" id="ph" name="phone" autocomplete="tel" required>
+    <label class="check"><input type="checkbox" id="consent"><span>I agree to be contacted by call, text, or email about my request. Consent is not required to use this service. (Sample wording: have it reviewed for your market.)</span></label>
+    <input type="text" id="hp" name="hp_field" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  </section>
+
+  <section data-step="4" hidden>
+    <h2>Check your answers</h2>
+    <p class="sub">This is exactly what we'll send to your agent. Use Back to fix anything, then submit.</p>
+    <div class="box"><dl id="rev"></dl></div>
+  </section>
+
+  <div id="err" role="alert"></div>
+  <div class="row"><button type="button" class="btn" id="back" hidden>Back</button><button type="button" class="btn" id="next" hidden>Continue</button></div>
+</div>
+
+<div class="card" id="result" hidden>
+  <h1 id="rTitle"></h1>
+  <p class="sub" id="rSub"></p>
+  <h2>What lands in the CRM</h2>
+  <div class="box"><span id="rBadge" class="badge"></span><dl id="rDl" style="margin-top:12px"></dl></div>
+  <h2 style="margin-top:20px">What happens automatically</h2>
+  <div class="box"><ol id="rActs"></ol></div>
+  <h2 style="margin-top:20px">Instant reply the lead receives</h2>
+  <div class="box"><p class="msg" id="rMsg"></p></div>
+  <details><summary>See the data payload sent to Zapier or n8n</summary><pre id="rJson"></pre></details>
+  <div class="row"><button type="button" class="btn ghost" id="again">Start over</button></div>
+  <p class="demo" style="margin-top:14px">Demo only. Nothing was sent anywhere.</p>
+</div>
+</main>
+<script>
+// To use live: host this file on your own site and paste a Zapier or n8n webhook URL below.
+var WEBHOOK_URL = "";
+var S = {}, step = 0, LAST = 4, T0 = Date.now(), TEST = new URLSearchParams(location.search).get("test") === "1";
+var $ = function (s) { return document.querySelector(s); };
+var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+var secs = $$("section[data-step]");
+function vis(sec) { return +sec.dataset.step === step && (!sec.dataset.path || sec.dataset.path === S.intent); }
+function render() {
+  secs.forEach(function (s) { s.hidden = !vis(s); });
+  $("#bar").style.width = ((step + 1) / 5 * 100) + "%";
+  $("#stepno").textContent = "Step " + (step + 1) + " of 5";
+  $("#back").hidden = step === 0; $("#next").hidden = step === 0;
+  $("#next").textContent = step === LAST ? "Submit" : "Continue";
+  $("#err").textContent = "";
+  window.scrollTo(0, 0);
+}
+function collect() {
+  $$("section").forEach(function (s) { if (!vis(s)) return;
+    s.querySelectorAll("input[type=text],input[type=email],input[type=tel],textarea").forEach(function (i) { S[i.name] = i.value.trim(); });
+  });
+}
+function check() {
+  var msg = "";
+  $$("section").forEach(function (s) { if (!vis(s) || msg) return;
+    s.querySelectorAll("input[required]").forEach(function (i) { if (!msg && !i.value.trim()) msg = "Please fill in all fields."; });
+    s.querySelectorAll(".chips[data-req]").forEach(function (g) { if (!msg && !S[g.dataset.name]) msg = "Please choose an option for each question."; });
+  });
+  if (!msg && step === 3) {
+    var nm = $("#nm").value.trim(), em = $("#em").value.trim().toLowerCase(), dom = em.split("@")[1] || "", loc = em.split("@")[0] || "", ph = phoneOk($("#ph").value);
+    if (badName(nm)) msg = "Please enter your full first and last name.";
+    else if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(em)) msg = "Please enter a valid email address.";
+    else if (TYPOS[dom]) msg = "Did you mean " + loc + "@" + TYPOS[dom] + "? Please check your email.";
+    else if (DISPOSABLE.indexOf(dom) > -1 || /^(test|asdf|fake|abc|none|noemail|no|na|example|email)\d*$/.test(loc)) msg = "Please use a real email address that you check.";
+    else if (!ph.ok) msg = ph.msg;
+    else if (!$("#consent").checked) msg = "Please tick the consent box so we can contact you.";
+  }
+  $("#err").textContent = msg; return !msg;
+}
+var DISPOSABLE = ["mailinator.com","10minutemail.com","guerrillamail.com","tempmail.com","yopmail.com","trashmail.com","sharklasers.com","getnada.com","throwawaymail.com","fakeinbox.com","maildrop.cc","dispostable.com"];
+var TYPOS = {"gmial.com":"gmail.com","gmal.com":"gmail.com","gnail.com":"gmail.com","gmail.co":"gmail.com","gmail.con":"gmail.com","yaho.com":"yahoo.com","yahooo.com":"yahoo.com","hotmial.com":"hotmail.com","hotmail.con":"hotmail.com","outlok.com":"outlook.com","icloud.con":"icloud.com"};
+function badName(n) {
+  var w = n.split(/\s+/), last = (w[w.length - 1] || "").replace(/[^A-Za-z\u00C0-\u00FF]/g, "");
+  if (w.length < 2 || last.length < 2 || n.replace(/[^A-Za-z\u00C0-\u00FF]/g, "").length < 4) return true;
+  if (!/^[A-Za-z\u00C0-\u00FF'.\- ]+$/.test(n) || /(.)\1{2,}/i.test(n)) return true;
+  return /\b(test|asdf|qwer|fake|none|abc|xyz|lorem|john doe|jane doe)\b/i.test(n);
+}
+function phoneOk(raw) {
+  var d = raw.replace(/\D/g, ""), bad = { ok: false, msg: "Please enter a real 10-digit US or Canadian phone number." }, u = {};
+  if (d.length === 11 && d[0] === "1") d = d.slice(1);
+  if (d.length !== 10 || !/^[2-9]\d{2}[2-9]\d{6}$/.test(d)) return bad;
+  d.split("").forEach(function (c) { u[c] = 1; });
+  if (Object.keys(u).length < 3 || (d[1] === "1" && d[2] === "1") || (d[4] === "1" && d[5] === "1") || (d.slice(3, 6) === "555" && d.slice(6, 8) === "01") || "01234567890123456789".indexOf(d) > -1 || "98765432109876543210".indexOf(d) > -1) return bad;
+  return { ok: true, d: d };
+}
+function fmtPhone(d) { return d ? "+1 (" + d.slice(0, 3) + ") " + d.slice(3, 6) + "-" + d.slice(6) : ""; }
+function go() {
+  if (!check()) return; collect();
+  if (step === 3) { S.phone = phoneOk(S.phone).d; S.email = S.email.toLowerCase(); }
+  if (step === LAST) return submit();
+  step++; render(); if (step === LAST) fillDl($("#rev"), rowsFor(S));
+}
+document.addEventListener("click", function (e) {
+  var c = e.target.closest(".chip"); if (!c) return;
+  var g = c.parentElement;
+  g.querySelectorAll(".chip").forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+  S[g.dataset.name] = c.dataset.v;
+  if (g.dataset.auto) { step = 1; render(); $("#tq").textContent = S.intent === "buy" ? "When do you want to buy?" : "When do you want to sell?"; }
+});
+$("#next").addEventListener("click", go);
+$("#back").addEventListener("click", function () { if (step > 0) { step--; render(); } });
+$("#again").addEventListener("click", function () { location.reload(); });
+
+function score() {
+  var t = { "Within 1 month": 4, "1 to 3 months": 3, "3 to 6 months": 2, "6+ months": 1, "Just exploring": 0 }[S.timeline] || 0;
+  var f = S.intent === "buy" ? ({ "Pre-approved": 3, "Paying cash": 3, "Working on it": 1, "Not yet": 0 }[S.fin] || 0) : (S.val === "Yes, soon" ? 3 : 0);
+  var n = t + f + 1;
+  return { n: n, tier: n >= 6 ? "hot" : n >= 3 ? "warm" : "cool" };
+}
+function el(tag, text, cls) { var e = document.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e; }
+function fillDl(dl, rows) { dl.textContent = ""; rows.forEach(function (r) { dl.appendChild(el("dt", r[0])); dl.appendChild(el("dd", r[1])); }); }
+function rowsFor(d) {
+  var buy = d.intent === "buy";
+  var r = [["Full name", d.name], ["Email", d.email], ["Phone", fmtPhone(d.phone)], ["Goal", buy ? "Buying" : "Selling"], ["Area", d.area],
+    [buy ? "Beds / baths" : "Property", buy ? d.beds + " bed, " + d.baths + " bath" : d.ptype], [buy ? "Budget" : "Est. value", d.budget],
+    ["Timeline", d.timeline], [buy ? "Financing" : "Valuation", buy ? d.fin : d.val]];
+  if (d.notes) r.push(["Notes", d.notes]);
+  return r;
+}
+function submit() {
+  if ($("#hp").value) return;
+  var sc = score(), buy = S.intent === "buy", q = sc.tier === "hot", first = S.name.split(/\s+/)[0];
+  var label = { hot: "Hot: qualified lead", warm: "Warm: nurture", cool: "Cool: long-term list" }[sc.tier];
+  var p = new URLSearchParams(location.search), secs = Math.round((Date.now() - T0) / 1000), flags = [];
+  if (secs < 15) flags.push("too_fast");
+  var id = "LD-" + Date.now().toString(36).toUpperCase().slice(-6), at = new Date().toISOString();
+  var data = { lead_id: id, submitted_at: at, test: TEST, source: p.get("utm_source") || "demo", campaign: p.get("utm_campaign") || "demo",
+    intent: S.intent, full_name: S.name, email: S.email, phone_e164: "+1" + S.phone, area: S.area, timeline: S.timeline, budget: S.budget,
+    notes: S.notes || "", score: sc.n, tier: sc.tier, seconds_to_complete: secs, flags: flags, consent: true, email_verified: false, phone_verified: false };
+  if (buy) { data.beds = S.beds; data.baths = S.baths; data.financing = S.fin; } else { data.property_type = S.ptype; data.valuation_requested = S.val; }
+  if (WEBHOOK_URL) { try { fetch(WEBHOOK_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(data) }).catch(function () {}); } catch (x) {} }
+
+  $("#rTitle").textContent = "Thanks, " + first + "!";
+  $("#rSub").textContent = "This is what the agent and the CRM see the moment you submit.";
+  var b = $("#rBadge"); b.textContent = label + " (score " + sc.n + ")"; b.className = "badge " + sc.tier;
+  var rows = rowsFor(S).concat([["Lead ID", id], ["Source", data.source], ["Submitted", at]]);
+  if (flags.length) rows.push(["Flags", flags.join(", ")]);
+  if (TEST) rows.push(["Mode", "TEST"]);
+  fillDl($("#rDl"), rows);
+  var ol = $("#rActs"); ol.textContent = "";
+  ["Contact created in the CRM with the lead ID, timestamp, and all answers, tagged \"" + sc.tier + "\" + \"" + S.intent + "\"",
+   "Instant text and email sent to the lead, recapping their answers",
+   q ? "Agent alerted by text and email, with a task to call within 5 minutes" : "Lead added to an automated follow-up sequence",
+   "Row added to the monthly report"].forEach(function (a) { ol.appendChild(el("li", a)); });
+  var recap = buy ? "buying in " + S.area + " (" + S.beds + " bed, " + S.baths + " bath, budget " + S.budget + ", timeline " + S.timeline + ")"
+    : "selling your " + S.ptype.toLowerCase() + " at " + S.area + " (est. value " + S.budget + ", timeline " + S.timeline + ")";
+  $("#rMsg").textContent = "Hi " + first + ", this is [Your Brand] confirming the request you just submitted on our website (ref " + id + "). You told us you're " + recap + ". " + (q ? "An agent will call you shortly." : "We'll send helpful listings and market updates.") + " Reply STOP to opt out.";
+  $("#rJson").textContent = JSON.stringify(data, null, 2);
+  $("#formCard").hidden = true; $("#result").hidden = false; window.scrollTo(0, 0);
+}
+if (TEST) $("#testbar").hidden = false;
+render();
+</script>
+</body>
+</html>
